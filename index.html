@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>The greatest GiphyShow on earth</title>
+	<style type="text/css">
+		.divforButtons {
+
+		}
+	</style>
+</head>
+<body>
+
+	<!--<h1 id="recentchoices">Recent Choices</h1> -->
+<!--
+	<form>
+		<label>Enter the type of Giphy you want to add to your favorite list and Press Add button</label>
+		<input type="text" name="ABC"> -->
+	<!--	<input type="submit" name="XYZ" value="add"> -->
+	 <!--   <button id="clicktoadd">add</button> -->
+	 <!--<button id="clicktoadd">add</button>-->	
+	 <!--			
+	</form>
+-->
+    <span>
+    <label>Enter the type of Giphy you want to add to your favorite list and Press Add button</label>
+	<input type="text" name="ABC">	
+    <button id="clicktoadd">Add to Array</button>
+    </span>
+	
+	
+
+	<div id="forChoices">
+	<p id="recentchoices">Recent Choices Array</p>
+	<!--<h1 id="recentchoices">Recent Choices</h1> -->
+	<button id="crtgiphybtn" type="submit">Add Recent Choices to Fav List from Array</button> -->
+	</div>
+	
+
+
+	<div id="divforButtons"></div>
+
+	<div id="divforgifs"></div>
+
+	<script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+	<script type="text/javascript">
+		var choiceGiphy = "";
+		var favList = ["cars", "film stars", "sports", "music"];
+		var startIndex = 0;
+		var nbrOfBtnsCrtd=0;
+		var btnToCrt;
+		var strRecentChoices="";
+
+		crtButtonsFromArray(); 
+
+		function crtButtonsFromArray() {
+			startIndex = nbrOfBtnsCrtd;
+			for(var i=startIndex; i<favList.length; i++) {
+				btnToCrt = $("<button>");
+				//alert(favList[i]);
+				btnToCrt.attr("data-gif", favList[i]);
+				btnToCrt.text(favList[i]);
+				//btnToCrt.attr("text", favList[i]);
+				btnToCrt.addClass("classGetGiphy");
+				$("#divforButtons").append(btnToCrt);
+				nbrOfBtnsCrtd++;
+			}
+		}
+
+
+	//$("input[type='submit']").on("click", function() {
+	$("#clicktoadd").on("click", function() {
+		choiceGiphy = $("input[type='text']").val();
+		//alert("choicegiphy is " + choiceGiphy); 
+		//console.log("choice giphy is " + choiceGiphy);
+			if (choiceGiphy != "") {
+		//		alert("Iam not null");
+				favList.push(choiceGiphy);
+		//		alert(favList.length);
+				strRecentChoices = $("#recentchoices").html();
+		//		alert(strRecentChoices);
+
+				if (strRecentChoices != "Recent Choices Array") {
+					strRecentChoices = strRecentChoices + "; " + choiceGiphy;
+				} else {
+					strRecentChoices = strRecentChoices + " : " + choiceGiphy;
+				}
+		//		alert(strRecentChoices);
+				$("#recentchoices").html(strRecentChoices);
+			}
+		});
+
+
+		$("#crtgiphybtn").on("click", function() {
+			crtButtonsFromArray();
+		})
+
+		$(".classGetGiphy").on("click", function() {
+			
+			var gifToGet = $(this).attr("data-gif");
+			var queryURL = "http://api.giphy.com/v1/gifs/search?q=" +
+        					gifToGet + "&api_key=dc6zaTOxFJmzC&limit=10";
+        	//alert(gifToGet);
+        	//alert(queryURL);
+        	$.ajax({
+        		url: queryURL,
+        		method: "GET"
+        	}).done(function(response) {
+        		//store the results in an array
+        		var results = response.data;
+        		for (var i = 0; i <= results.length - 1; i++) {
+        			if (results[i].rating != "r" && results[i].rating != 'pg-13') {
+        			var divForEachGif = $("<div class= 'divEachGif'>");
+        			var gifImage = $("<img>");
+        			//alert(results[i].images.fixed_height.url);
+        			gifImage.attr("src", results[i].images.fixed_height.url);
+        			divForEachGif.append(gifImage);
+        			$("#divforgifs").prepend(divForEachGif);
+        			}
+    			}
+    			
+        	})
+		})
+	
+	</script>	
+</body>
+</html>
