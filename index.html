@@ -95,7 +95,7 @@
 			crtButtonsFromArray();
 		})
 
-		$(".classGetGiphy").on("click", function() {
+		$("#divforButtons").on("click", ".classGetGiphy", function() {
 			
 			var gifToGet = $(this).attr("data-gif");
 			var queryURL = "http://api.giphy.com/v1/gifs/search?q=" +
